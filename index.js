@@ -273,6 +273,27 @@ async function run() {
             const result = await collection.deleteOne(query);
             res.send(result)
         })
+        //Update API-------------->
+        app.get('/user/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await collection.findOne(query)
+            res.send(result)
+        })
+        app.put('/user/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedUser = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    name: updatedUser.name,
+                    email: updatedUser.email
+                }
+            };
+            const result = await collection.updateOne(filter, updateDoc, options)
+            res.send(result)
+        })
     }
     finally {
         // await client.close()
